@@ -1,27 +1,24 @@
 package com.scaler.blogapi.comments;
 
+import com.scaler.blogapi.articles.ArticleEntity;
+import com.scaler.blogapi.commons.BaseEntity;
+import com.scaler.blogapi.users.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
-import java.util.UUID;
 
 @Getter
 @Entity(name = "comments")
-public class CommentEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false)
-    @JdbcTypeCode(SqlTypes.UUID)
-    private UUID id;
+public class CommentEntity extends BaseEntity {
 
-    public UUID getId() {
-        return id;
-    }
+    @Column(length = 100)
+    String title;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    @Column(nullable = false, length = 1000)
+    String body;
+
+    @ManyToOne
+    UserEntity author;
+
+    @ManyToOne
+    ArticleEntity article;
 }

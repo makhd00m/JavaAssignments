@@ -1,19 +1,19 @@
 package com.scaler.blogapi.users;
 
-import jakarta.persistence.*;
+import com.scaler.blogapi.commons.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import lombok.Getter;
-
-import java.util.UUID;
 
 @Getter
 @Entity(name = "users")
-public class UserEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false)
-    private UUID id;
-
-    public UUID getId() {
-        return id;
-    }
+public class UserEntity extends BaseEntity {
+    @Column(nullable = false, unique = true, length = 30)
+    String username;
+    @Column(nullable = false, unique = false, length = 50)
+    String email;
+    @Column(nullable = false, length = 32)
+    String password;                            // TODO: do not save password in plain text
+    @Column
+    String bio;
 }

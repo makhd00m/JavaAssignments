@@ -1,26 +1,23 @@
 package com.scaler.blogapi.articles;
 
+import com.scaler.blogapi.commons.BaseEntity;
+import com.scaler.blogapi.users.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
-import java.util.UUID;
 
 @Getter
 @Entity(name = "articles")
-public class ArticleEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false)
-    @JdbcTypeCode(SqlTypes.UUID)
-    private UUID id;
+public class ArticleEntity extends BaseEntity {
 
-    public UUID getId() {
-        return id;
-    }
+    @Column(nullable = false, length = 150)
+    String title;
+    @Column(nullable = false, length = 100)
+    String slug;
+    @Column(length = 250)
+    String subtitle;
+    @Column(nullable = false, length = 3000)
+    String body;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    @ManyToOne
+    UserEntity author;
 }
