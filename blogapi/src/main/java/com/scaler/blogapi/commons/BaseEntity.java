@@ -10,10 +10,8 @@ import java.util.UUID;
 public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(nullable = false)
     private UUID id;
 
     @CreatedDate
-    @Column(nullable = false)
     Date createdAt;
 }
