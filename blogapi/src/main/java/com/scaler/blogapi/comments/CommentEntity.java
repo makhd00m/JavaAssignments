@@ -12,13 +12,11 @@ public class CommentEntity extends BaseEntity {
 
     @Column(length = 100)
     String title;
-
     @Column(nullable = false, length = 1000)
     String body;
 
     @ManyToOne
     UserEntity author;
-
     @ManyToOne
     ArticleEntity article;
 }
