@@ -16,7 +16,8 @@ public class CommentEntity extends BaseEntity {
     String body;
 
     @ManyToOne
-    UserEntity author;
+    UserEntity commenter;
+
     @ManyToOne
     ArticleEntity article;
 }
