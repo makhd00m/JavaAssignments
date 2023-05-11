@@ -1,6 +1,6 @@
-package com.scaler.taskmanager.tasks.dtos;
+package com.scaler.taskmanager.dtos.responseDTOS;
 
-import com.scaler.taskmanager.tasks.Task;
+import com.scaler.taskmanager.models.Task;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

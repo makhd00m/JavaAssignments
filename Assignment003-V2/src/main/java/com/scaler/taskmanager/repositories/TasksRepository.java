@@ -1,4 +1,4 @@
-package com.scaler.taskmanager.tasks.dtos;
+package com.scaler.taskmanager.repositories;
 
 import org.springframework.stereotype.Repository;
 

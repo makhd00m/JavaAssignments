@@ -1,7 +1,12 @@
-package com.scaler.taskmanager.tasks;
+package com.scaler.taskmanager.services;
 
-import com.scaler.taskmanager.tasks.dtos.CreateTaskDTO;
-import com.scaler.taskmanager.tasks.dtos.UpdateTaskDTO;
+import com.scaler.taskmanager.models.Task;
+import com.scaler.taskmanager.repositories.TasksRepository;
+import com.scaler.taskmanager.dtos.requestDTOS.CreateTaskRequestDTO;
+import com.scaler.taskmanager.dtos.requestDTOS.UpdateTaskRequestDTO;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -11,8 +16,30 @@ import java.util.List;
 
 @Service
 public class TasksService {
+    private final TasksRepository tasksRepository;
     private List<Task> tasks = new ArrayList<>();
     private Integer id = 0;
+
+    public TasksService(@Autowired TasksRepository tasksRepository) {
+        this.tasksRepository = tasksRepository;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class TaskFilter {
+        LocalDate beforeDate;
+        LocalDate afterDate;
+        Boolean completed;
+
+        public static TaskFilter fromQueryParams(LocalDate beforeDate, LocalDate afterDate, Boolean completed) {
+            if(beforeDate == null && afterDate == null && completed == null) {
+                return null;
+            }
+
+            TaskFilter taskFilter = new TaskFilter(beforeDate, afterDate, completed);
+            return taskFilter;
+        }
+    }
 
     public List<Task> getAllTasks(TaskFilter taskFilter) {
         if(taskFilter == null) {
@@ -43,7 +70,7 @@ public class TasksService {
         throw new TaskNotFoundException(id);
     }
 
-    public Task createTask(CreateTaskDTO createTaskDTO) {
+    public Task createTask(CreateTaskRequestDTO createTaskDTO) {
         if(createTaskDTO.getName().length() < 5 || createTaskDTO.getName().length() > 100)
             throw new IllegalArgumentException(createTaskDTO.getName());
         if(createTaskDTO.getDueDate().compareTo(java.time.LocalDate.now()) < 0)
@@ -54,7 +81,23 @@ public class TasksService {
         return task;
     }
 
-    public Task updateTask(Integer id, UpdateTaskDTO updateTaskDTO) {
+    public Task createTask(Integer newId, CreateTaskRequestDTO createTaskDTO) {
+        if(createTaskDTO.getName().length() < 5 || createTaskDTO.getName().length() > 100)
+            throw new IllegalArgumentException(createTaskDTO.getName());
+        if(createTaskDTO.getDueDate().compareTo(java.time.LocalDate.now()) < 0)
+            throw new IllegalArgumentException(createTaskDTO.getDueDate());
+
+        if(!tasks.stream().filter(t -> t.getId().equals(newId)).findAny().equals(tasks.isEmpty())) {
+            return updateTask(newId, new UpdateTaskRequestDTO(createTaskDTO.getDueDate(), false));
+        }
+        else {
+            Task task = new Task(id++, createTaskDTO.getName(), createTaskDTO.getDueDate(), false);
+            tasks.add(task);
+            return task;
+        }
+    }
+
+    public Task updateTask(Integer id, UpdateTaskRequestDTO updateTaskDTO) {
         if (updateTaskDTO.getDueDate().compareTo(java.time.LocalDate.now()) < 0)
             throw new IllegalArgumentException(updateTaskDTO.getDueDate());
 
@@ -103,24 +146,6 @@ public class TasksService {
 
         public IllegalArgumentException(String name) {
             super("Given name : " + name + " has less than 5 or more than 100 characters");
-        }
-    }
-
-    public static class TaskFilter {
-        LocalDate beforeDate;
-        LocalDate afterDate;
-        Boolean completed;
-
-        static TaskFilter fromQueryParams(LocalDate beforeDate, LocalDate afterDate, Boolean completed) {
-            if(beforeDate == null && afterDate == null && completed == null) {
-                return null;
-            }
-
-            TaskFilter taskFilter = new TaskFilter();
-            taskFilter.beforeDate = beforeDate;
-            taskFilter.afterDate = afterDate;
-            taskFilter.completed = completed;
-            return taskFilter;
         }
     }
 }
