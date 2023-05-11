@@ -1,27 +1,108 @@
 package com.scaler.taskmanager.services;
 
 import com.scaler.taskmanager.models.Task;
-import com.scaler.taskmanager.repositories.TasksRepository;
 import com.scaler.taskmanager.dtos.requestDTOS.CreateTaskRequestDTO;
 import com.scaler.taskmanager.dtos.requestDTOS.UpdateTaskRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TasksService {
-    private final TasksRepository tasksRepository;
-    private List<Task> tasks = new ArrayList<>();
+    private final List<Task> tasksList = new ArrayList<>();
     private Integer id = 0;
 
-    public TasksService(@Autowired TasksRepository tasksRepository) {
-        this.tasksRepository = tasksRepository;
+    public List<Task> getAllTasks(String sortOrder, TaskFilter taskFilter) {
+        if(taskFilter == null) {
+            return tasksList;
+        }
+
+        var filteredTasks = new ArrayList<>(tasksList.stream().filter(task -> {
+            if (taskFilter.beforeDate != null && task.getDueDate().isAfter(taskFilter.beforeDate)) {
+                return false;
+            }
+            if (taskFilter.afterDate != null && task.getDueDate().isBefore(taskFilter.afterDate)) {
+                return false;
+            }
+            if (taskFilter.completed != null && task.getCompleted() != taskFilter.completed) {
+                return false;
+            }
+            return true;
+        }).toList());
+
+        filteredTasks.sort(new Sorter());
+        return filteredTasks;
+    }
+
+    public Task getTaskById(Integer id) {
+        for(Task task : tasksList) {
+            if(task.getId().equals(id)) {
+                return task;
+            }
+        }
+        throw new TaskNotFoundException(id);
+    }
+
+    public Task createTask(CreateTaskRequestDTO createTaskRequestDTO) {
+        validateTask(createTaskRequestDTO.getName());
+        validateTask(createTaskRequestDTO.getDueDate());
+
+        Task task = new Task(id++, createTaskRequestDTO.getName(), createTaskRequestDTO.getDueDate(), false);
+        tasksList.add(task);
+        return task;
+    }
+
+    public Task createTask(Integer newId, CreateTaskRequestDTO createTaskRequestDTO) {
+        validateTask(createTaskRequestDTO.getName());
+        validateTask(createTaskRequestDTO.getDueDate());
+
+        if(tasksList.stream().anyMatch(t -> t.getId().equals(newId))) {
+            return updateTask(newId, new UpdateTaskRequestDTO(createTaskRequestDTO.getDueDate(), false));
+        }
+        else {
+            Task task = new Task(id++, createTaskRequestDTO.getName(), createTaskRequestDTO.getDueDate(), false);
+            tasksList.add(task);
+            return task;
+        }
+    }
+
+    public Task updateTask(Integer id, UpdateTaskRequestDTO updateTaskRequestDTO) {
+        validateTask(updateTaskRequestDTO.getDueDate());
+
+        Task task = getTaskById(id);
+        if(updateTaskRequestDTO.getDueDate() != null) {
+            task.setDueDate(updateTaskRequestDTO.getDueDate());
+        }
+        if(updateTaskRequestDTO.getCompleted() != null) {
+            task.setCompleted(updateTaskRequestDTO.getCompleted());
+        }
+        return task;
+    }
+
+    public void deleteTask(Integer id) {
+        Task task = getTaskById(id);
+        tasksList.remove(task);
+    }
+
+    public Integer deleteTask(Boolean completed) {
+        List<Task> updatedTaskList = tasksList.stream().filter(task -> !task.getCompleted()).toList();
+        Integer countDeletedTasks = tasksList.size() - updatedTaskList.size();
+        tasksList.clear();
+        tasksList.addAll(updatedTaskList);
+        return countDeletedTasks;
+    }
+
+    public void validateTask(LocalDate dueDate) {
+        if(dueDate.isBefore(LocalDate.now()))
+            throw new IllegalArgumentException(dueDate);
+    }
+
+    public void validateTask(String name) {
+        if(name.length() < 5 || name.length() > 100)
+            throw new IllegalArgumentException(name);
     }
 
     @Getter
@@ -35,101 +116,19 @@ public class TasksService {
             if(beforeDate == null && afterDate == null && completed == null) {
                 return null;
             }
-
-            TaskFilter taskFilter = new TaskFilter(beforeDate, afterDate, completed);
-            return taskFilter;
+            return new TaskFilter(beforeDate, afterDate, completed);
         }
     }
 
-    public List<Task> getAllTasks(TaskFilter taskFilter) {
-        if(taskFilter == null) {
-            return tasks;
-        } else {
-            var filteredTasks = tasks.stream().filter(task -> {
-                if(taskFilter.beforeDate != null && task.getDueDate().compareTo(taskFilter.beforeDate) > 0) {
-                    return false;
-                }
-                if(taskFilter.afterDate != null && task.getDueDate().compareTo(taskFilter.afterDate) < 0) {
-                    return false;
-                }
-                if(taskFilter.completed != null && task.getCompleted() != taskFilter.completed) {
-                    return false;
-                }
-                return true;
-            }).toList();
-            return filteredTasks;
+    static class Sorter implements Comparator<Task> {
+        public int compare(Task t1, Task t2) {
+            if (t1.getDueDate().isBefore(t2.getDueDate()))
+                return 1;
+            else if (t1.getDueDate().isEqual(t2.getDueDate()))
+                return 0;
+            else
+                return -1;
         }
-    }
-
-    public Task getTaskById(Integer id) {
-        for(Task task : tasks) {
-            if(task.getId().equals(id)) {
-                return task;
-            }
-        }
-        throw new TaskNotFoundException(id);
-    }
-
-    public Task createTask(CreateTaskRequestDTO createTaskDTO) {
-        if(createTaskDTO.getName().length() < 5 || createTaskDTO.getName().length() > 100)
-            throw new IllegalArgumentException(createTaskDTO.getName());
-        if(createTaskDTO.getDueDate().compareTo(java.time.LocalDate.now()) < 0)
-            throw new IllegalArgumentException(createTaskDTO.getDueDate());
-
-        Task task = new Task(id++, createTaskDTO.getName(), createTaskDTO.getDueDate(), false);
-        tasks.add(task);
-        return task;
-    }
-
-    public Task createTask(Integer newId, CreateTaskRequestDTO createTaskDTO) {
-        if(createTaskDTO.getName().length() < 5 || createTaskDTO.getName().length() > 100)
-            throw new IllegalArgumentException(createTaskDTO.getName());
-        if(createTaskDTO.getDueDate().compareTo(java.time.LocalDate.now()) < 0)
-            throw new IllegalArgumentException(createTaskDTO.getDueDate());
-
-        if(!tasks.stream().filter(t -> t.getId().equals(newId)).findAny().equals(tasks.isEmpty())) {
-            return updateTask(newId, new UpdateTaskRequestDTO(createTaskDTO.getDueDate(), false));
-        }
-        else {
-            Task task = new Task(id++, createTaskDTO.getName(), createTaskDTO.getDueDate(), false);
-            tasks.add(task);
-            return task;
-        }
-    }
-
-    public Task updateTask(Integer id, UpdateTaskRequestDTO updateTaskDTO) {
-        if (updateTaskDTO.getDueDate().compareTo(java.time.LocalDate.now()) < 0)
-            throw new IllegalArgumentException(updateTaskDTO.getDueDate());
-
-        Task task = getTaskById(id);
-        if(updateTaskDTO.getDueDate() != null) {
-            task.setDueDate(updateTaskDTO.getDueDate());
-        }
-        if(updateTaskDTO.getCompleted() != null) {
-            task.setCompleted(updateTaskDTO.getCompleted());
-        }
-        return task;
-    }
-
-    public void deleteTask(Integer id) {
-        Task task = getTaskById(id);
-        tasks.remove(task);
-    }
-
-    public Integer deleteTask(Boolean completed) {
-        List<Task> updatedTaskList = new ArrayList<Task>();
-        Integer countDeletedTasks = 0;
-
-        for(Task task : tasks) {
-            if(task.getCompleted()) {
-                updatedTaskList.add(task);
-            }
-            else {
-                countDeletedTasks++;
-            }
-        }
-        tasks = updatedTaskList;
-        return countDeletedTasks;
     }
 
     // TODO: in error responses send the error message in a json object

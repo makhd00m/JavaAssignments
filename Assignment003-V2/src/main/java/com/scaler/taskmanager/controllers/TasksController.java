@@ -26,13 +26,16 @@ public class TasksController {
     //                           GET
     // ----------------------------------------------------------------
     @GetMapping("")
-    ResponseEntity<List<TaskResponseDTO>> getAllTasks(@RequestBody TasksService.TaskFilter filter) {
+    ResponseEntity<List<TaskResponseDTO>> getAllTasks(
+            @RequestParam(name = "sort", required = false) String sortOrder,
+            @RequestBody TasksService.TaskFilter filter
+    ) {
         TasksService.TaskFilter taskFilter = TasksService.TaskFilter.fromQueryParams(
                 filter.getBeforeDate(),
                 filter.getAfterDate(),
                 filter.getCompleted()
         );
-        var tasks = tasksService.getAllTasks(filter);
+        var tasks = tasksService.getAllTasks(sortOrder, filter);
 
         List<TaskResponseDTO> taskResponseDTOS = new ArrayList<>();
 
