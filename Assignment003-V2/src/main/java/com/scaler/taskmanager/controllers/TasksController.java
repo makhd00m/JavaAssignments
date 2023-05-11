@@ -1,5 +1,7 @@
 package com.scaler.taskmanager.controllers;
 
+import com.scaler.taskmanager.exceptions.TaskNotFoundException;
+import com.scaler.taskmanager.exceptions.IllegalArgumentException;
 import com.scaler.taskmanager.models.Task;
 import com.scaler.taskmanager.services.TasksService;
 import com.scaler.taskmanager.dtos.requestDTOS.CreateTaskRequestDTO;
@@ -113,8 +115,8 @@ public class TasksController {
     // ----------------------------------------------------------------
     @ExceptionHandler(
             {
-                    TasksService.TaskNotFoundException.class,
-                    TasksService.IllegalArgumentException.class
+                    TaskNotFoundException.class,
+                    IllegalArgumentException.class
             }
     )
     ResponseEntity<String> handleTaskNotFoundOrIllegalArgumentException(Exception e) {

@@ -1,5 +1,7 @@
 package com.scaler.taskmanager.services;
 
+import com.scaler.taskmanager.exceptions.TaskNotFoundException;
+import com.scaler.taskmanager.exceptions.IllegalArgumentException;
 import com.scaler.taskmanager.models.Task;
 import com.scaler.taskmanager.dtos.requestDTOS.CreateTaskRequestDTO;
 import com.scaler.taskmanager.dtos.requestDTOS.UpdateTaskRequestDTO;
@@ -154,26 +156,6 @@ public class TasksService {
                 return 0;
             else
                 return -1;
-        }
-    }
-
-    // ----------------------------------------------------------------
-    //                    EXCEPTION_HANDLING
-    // ----------------------------------------------------------------
-    // TODO: in error responses send the error message in a json object
-    public static class TaskNotFoundException extends IllegalStateException {
-        public TaskNotFoundException(Integer id) {
-            super("Task with id : " + id + " not found");
-        }
-    }
-
-    public static class IllegalArgumentException extends java.lang.IllegalArgumentException {
-        public IllegalArgumentException(LocalDate dueDate) {
-            super("Given dueDate : " + dueDate + " is less than the current date : " + new Date());
-        }
-
-        public IllegalArgumentException(String name) {
-            super("Given name : " + name + " has less than 5 or more than 100 characters");
         }
     }
 }
