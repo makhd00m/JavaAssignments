@@ -15,11 +15,15 @@ public class TasksService {
     private final List<Task> tasksList = new ArrayList<>();
     private Integer id = 0;
 
+    // ----------------------------------------------------------------
+    //                    RETURN_TASKS
+    // ----------------------------------------------------------------
     public List<Task> getAllTasks(String sortOrder, TaskFilter taskFilter) {
         if(taskFilter == null) {
             return tasksList;
         }
 
+        // ----------------------------FILTERING-----------------------
         var filteredTasks = new ArrayList<>(tasksList.stream().filter(task -> {
             if (taskFilter.beforeDate != null && task.getDueDate().isAfter(taskFilter.beforeDate)) {
                 return false;
@@ -33,7 +37,11 @@ public class TasksService {
             return true;
         }).toList());
 
+        // ----------------------------SORTING-------------------------
         filteredTasks.sort(new Sorter());
+        if(sortOrder != null)
+            if(sortOrder.equals("dateDesc"))
+                Collections.reverse(filteredTasks);
         return filteredTasks;
     }
 
@@ -46,6 +54,9 @@ public class TasksService {
         throw new TaskNotFoundException(id);
     }
 
+    // ----------------------------------------------------------------
+    //                         CREATE_TASK
+    // ----------------------------------------------------------------
     public Task createTask(CreateTaskRequestDTO createTaskRequestDTO) {
         validateTask(createTaskRequestDTO.getName());
         validateTask(createTaskRequestDTO.getDueDate());
@@ -69,6 +80,9 @@ public class TasksService {
         }
     }
 
+    // ----------------------------------------------------------------
+    //                         UPDATE_TASK
+    // ----------------------------------------------------------------
     public Task updateTask(Integer id, UpdateTaskRequestDTO updateTaskRequestDTO) {
         validateTask(updateTaskRequestDTO.getDueDate());
 
@@ -82,6 +96,9 @@ public class TasksService {
         return task;
     }
 
+    // ----------------------------------------------------------------
+    //                         DELETE_TASK
+    // ----------------------------------------------------------------
     public void deleteTask(Integer id) {
         Task task = getTaskById(id);
         tasksList.remove(task);
@@ -95,6 +112,9 @@ public class TasksService {
         return countDeletedTasks;
     }
 
+    // ----------------------------------------------------------------
+    //                    VALIDATION_FUNCTIONS
+    // ----------------------------------------------------------------
     public void validateTask(LocalDate dueDate) {
         if(dueDate.isBefore(LocalDate.now()))
             throw new IllegalArgumentException(dueDate);
@@ -105,6 +125,9 @@ public class TasksService {
             throw new IllegalArgumentException(name);
     }
 
+    // ----------------------------------------------------------------
+    //                    FILTER_CLASS
+    // ----------------------------------------------------------------
     @Getter
     @AllArgsConstructor
     public static class TaskFilter {
@@ -120,6 +143,9 @@ public class TasksService {
         }
     }
 
+    // ----------------------------------------------------------------
+    //                    SORTING_COMPARATOR
+    // ----------------------------------------------------------------
     static class Sorter implements Comparator<Task> {
         public int compare(Task t1, Task t2) {
             if (t1.getDueDate().isBefore(t2.getDueDate()))
@@ -131,6 +157,9 @@ public class TasksService {
         }
     }
 
+    // ----------------------------------------------------------------
+    //                    EXCEPTION_HANDLING
+    // ----------------------------------------------------------------
     // TODO: in error responses send the error message in a json object
     public static class TaskNotFoundException extends IllegalStateException {
         public TaskNotFoundException(Integer id) {

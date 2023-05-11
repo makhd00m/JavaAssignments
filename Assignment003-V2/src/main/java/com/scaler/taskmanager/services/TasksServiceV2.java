@@ -20,12 +20,16 @@ public class TasksServiceV2 {
         this.tasksRepository = tasksRepository;
     }
 
+    // ----------------------------------------------------------------
+    //                    RETURN_TASKS
+    // ----------------------------------------------------------------
     public List<Task> getAllTasks(String sortOrder, TaskFilter taskFilter) {
         var tasksList = tasksRepository.getTasksList();
         if(taskFilter == null) {
             return tasksList;
         }
 
+        // ----------------------------FILTERING-----------------------
         var filteredTasks = new ArrayList<>(tasksList.stream().filter(task -> {
             if (taskFilter.beforeDate != null && task.getDueDate().isAfter(taskFilter.beforeDate)) {
                 return false;
@@ -39,7 +43,11 @@ public class TasksServiceV2 {
             return true;
         }).toList());
 
-        filteredTasks.sort(new Sorter());
+        // ----------------------------SORTING-------------------------
+        filteredTasks.sort(new TasksService.Sorter());
+        if(sortOrder != null)
+            if(sortOrder.equals("dateDesc"))
+                Collections.reverse(filteredTasks);
         return filteredTasks;
     }
 
@@ -53,6 +61,9 @@ public class TasksServiceV2 {
         throw new TaskNotFoundException(id);
     }
 
+    // ----------------------------------------------------------------
+    //                         CREATE_TASK
+    // ----------------------------------------------------------------
     public Task createTask(CreateTaskRequestDTO createTaskRequestDTO) {
         validateTask(createTaskRequestDTO.getName());
         validateTask(createTaskRequestDTO.getDueDate());
@@ -80,6 +91,9 @@ public class TasksServiceV2 {
         return createTask(createTaskRequestDTO);
     }
 
+    // ----------------------------------------------------------------
+    //                         UPDATE_TASK
+    // ----------------------------------------------------------------
     public Task updateTask(Integer id, UpdateTaskRequestDTO updateTaskRequestDTO) {
         validateTask(updateTaskRequestDTO.getDueDate());
 
@@ -99,6 +113,9 @@ public class TasksServiceV2 {
         tasksList.remove(task);
     }
 
+    // ----------------------------------------------------------------
+    //                         DELETE_TASK
+    // ----------------------------------------------------------------
     public Integer deleteTask() {
         var tasksList = tasksRepository.getTasksList();
         List<Task> updatedTaskList = tasksList.stream().filter(task -> !task.getCompleted()).toList();
@@ -111,6 +128,9 @@ public class TasksServiceV2 {
         return countDeletedTasks;
     }
 
+    // ----------------------------------------------------------------
+    //                    VALIDATION_FUNCTIONS
+    // ----------------------------------------------------------------
     public void validateTask(LocalDate dueDate) {
         if(dueDate.isBefore(LocalDate.now()))
             throw new IllegalArgumentException(dueDate);
@@ -121,6 +141,9 @@ public class TasksServiceV2 {
             throw new IllegalArgumentException(name);
     }
 
+    // ----------------------------------------------------------------
+    //                    FILTER_CLASS
+    // ----------------------------------------------------------------
     @Getter
     @AllArgsConstructor
     public static class TaskFilter {
@@ -136,6 +159,9 @@ public class TasksServiceV2 {
         }
     }
 
+    // ----------------------------------------------------------------
+    //                    SORTING_COMPARATOR
+    // ----------------------------------------------------------------
     static class Sorter implements Comparator<Task> {
         public int compare(Task t1, Task t2) {
             if (t1.getDueDate().isBefore(t2.getDueDate()))
@@ -147,6 +173,9 @@ public class TasksServiceV2 {
         }
     }
 
+    // ----------------------------------------------------------------
+    //                    EXCEPTION_HANDLING
+    // ----------------------------------------------------------------
     // TODO: in error responses send the error message in a json object
     public static class TaskNotFoundException extends IllegalStateException {
         public TaskNotFoundException(Integer id) {
