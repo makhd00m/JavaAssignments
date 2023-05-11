@@ -73,6 +73,22 @@ public class TasksService {
         tasks.remove(task);
     }
 
+    public Integer deleteTask(Boolean completed) {
+        List<Task> updatedTaskList = new ArrayList<Task>();
+        Integer countDeletedTasks = 0;
+
+        for(Task task : tasks) {
+            if(task.getCompleted()) {
+                updatedTaskList.add(task);
+            }
+            else {
+                countDeletedTasks++;
+            }
+        }
+        tasks = updatedTaskList;
+        return countDeletedTasks;
+    }
+
     // TODO: in error responses send the error message in a json object
     public static class TaskNotFoundException extends IllegalStateException {
         public TaskNotFoundException(Integer id) {
