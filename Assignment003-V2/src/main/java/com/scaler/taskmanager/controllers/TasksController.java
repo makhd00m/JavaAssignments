@@ -40,8 +40,7 @@ public class TasksController {
         List<TaskResponseDTO> taskResponseDTOS = new ArrayList<>();
 
         for(Task task : tasks) {
-            TaskResponseDTO taskResponseDTO = new TaskResponseDTO(task);
-            taskResponseDTOS.add(taskResponseDTO);
+            taskResponseDTOS.add(new TaskResponseDTO(task));
         }
         return ResponseEntity.ok(taskResponseDTOS);
     }
@@ -49,7 +48,6 @@ public class TasksController {
     @GetMapping("/{id}")
     ResponseEntity<TaskResponseDTO> getTaskById(@PathVariable("id") Integer id) {
         var task = tasksService.getTaskById(id);
-
         TaskResponseDTO taskResponseDTO = new TaskResponseDTO(task);
         return ResponseEntity.ok(taskResponseDTO);
     }
@@ -60,7 +58,6 @@ public class TasksController {
     @PostMapping("")
     ResponseEntity<TaskResponseDTO> createTask(@RequestBody CreateTaskRequestDTO createTaskDTO) {
         var task = tasksService.createTask(createTaskDTO);
-
         TaskResponseDTO taskResponseDTO = new TaskResponseDTO(task);
         return ResponseEntity.ok(taskResponseDTO);
     }
@@ -71,9 +68,8 @@ public class TasksController {
     @PatchMapping("/{id}")
     ResponseEntity<TaskResponseDTO> updateTask(@PathVariable("id") Integer id, @RequestBody UpdateTaskRequestDTO updateTaskDTO) {
         var task = tasksService.updateTask(id, updateTaskDTO);
-
         TaskResponseDTO taskResponseDTO = new TaskResponseDTO(task);
-        return ResponseEntity.ok(taskResponseDTO);
+        return new ResponseEntity<>(taskResponseDTO, HttpStatus.OK);
     }
 
     // ----------------------------------------------------------------
@@ -84,15 +80,14 @@ public class TasksController {
     ResponseEntity<String> deleteCompletedTasks(
             @RequestParam(value = "completed", required = true) Boolean completed
     ) {
-        Integer numberOfTasksDeleted = tasksService.deleteTask(completed);
+        int numberOfTasksDeleted = tasksService.deleteTask(completed);
         return ResponseEntity.ok("Number of tasks deleted : " + numberOfTasksDeleted);
     }
 
     @DeleteMapping({"/{id}"})
-    ResponseEntity<Void> deleteTaskById(@PathVariable("id") Integer id) {
+    ResponseEntity<String> deleteTaskById(@PathVariable("id") Integer id) {
         tasksService.deleteTask(id);
-        Void voidExp = null;
-        return ResponseEntity.ok(voidExp);
+        return ResponseEntity.ok("Task with id : " + id + " is deleted");
     }
 
     // ----------------------------------------------------------------

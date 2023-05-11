@@ -107,8 +107,15 @@ public class TasksService {
     }
 
     public Integer deleteTask(Boolean completed) {
-        List<Task> updatedTaskList = tasksList.stream().filter(task -> !task.getCompleted()).toList();
-        Integer countDeletedTasks = tasksList.size() - updatedTaskList.size();
+        List<Task> updatedTaskList = tasksList.stream().filter(task -> {
+            return task.getCompleted() == completed;
+        }).toList();
+
+        int countDeletedTasks = tasksList.size() - updatedTaskList.size();
+
+        if(countDeletedTasks == 0)
+            return 0;
+
         tasksList.clear();
         tasksList.addAll(updatedTaskList);
         return countDeletedTasks;
