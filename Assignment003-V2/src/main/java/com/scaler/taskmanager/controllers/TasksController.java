@@ -1,7 +1,5 @@
 package com.scaler.taskmanager.controllers;
 
-import com.scaler.taskmanager.exceptions.TaskNotFoundException;
-import com.scaler.taskmanager.exceptions.IllegalArgumentException;
 import com.scaler.taskmanager.models.Task;
 import com.scaler.taskmanager.services.TasksService;
 import com.scaler.taskmanager.dtos.requestDTOS.CreateTaskRequestDTO;
@@ -108,20 +106,5 @@ public class TasksController {
         var task = tasksService.createTask(id, createTaskDTO);
         TaskResponseDTO taskResponseDTO = new TaskResponseDTO(task);
         return ResponseEntity.ok(taskResponseDTO);
-    }
-
-    // ----------------------------------------------------------------
-    //                         EXCEPTIONS
-    // ----------------------------------------------------------------
-    @ExceptionHandler(
-            {
-                    TaskNotFoundException.class,
-                    IllegalArgumentException.class
-            }
-    )
-    ResponseEntity<String> handleTaskNotFoundOrIllegalArgumentException(Exception e) {
-        return ResponseEntity.internalServerError().body(
-                "Server side error " + HttpStatus.NOT_FOUND + " : " + e.getMessage()
-        );
     }
 }
