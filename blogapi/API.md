@@ -5,21 +5,21 @@
 ### User
 
     {
-	    "id": 31,
-	    "username": "arnavg",
-	    "email":	"arnav@blog.com",
+	    "id":  31,
+	    "username":  "arnavg",
+	    "email":  "arnav@blog.com",
 	    "password": "xxxxxxxx",
-	    "authToken": "dakjghadlghadlghladhgkgdklgladkgjadlkgd"
-	    "bio": 		"writes really good articles!",
-	    "image":	"https://imgur.com/ahkbtqe.png"
+	    "authToken":  "dakjghadlghadlghladhgkgdklgladkgjadlkgd"
+	    "bio":  "writes really good articles!",
+	    "image":  "https://imgur.com/ahkbtqe.png"
     }
 
 ### Profile
 
     {
-	    "username": "arnavg",
-	    "bio": 		"writes really good articles!",
-	    "image":	"https://imgur.com/ahkbtqe.png"
+	    "username":  "arnavg",
+	    "bio":  "writes really good articles!",
+	    "image":  "https://imgur.com/ahkbtqe.png"
     }
 
 ### Article

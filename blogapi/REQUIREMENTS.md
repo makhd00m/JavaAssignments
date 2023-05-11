@@ -29,7 +29,7 @@ Make a web application for blogging which has built in capabilities to handle va
 ---
 
 ## Expectations from Submission
-### *Points which will be focussed on during evaluation*
+### *Points must be focussed*
 - The code should be working and demonstrable
 - Code should be written in a readable fashion using best practices
 - Code should be optimised on various fronts and hardcoding logic should be avoided
