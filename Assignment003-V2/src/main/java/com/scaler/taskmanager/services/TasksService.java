@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.logging.Filter;
 
 @Service
 public class TasksService {
@@ -24,27 +25,8 @@ public class TasksService {
         if(taskFilter == null) {
             return tasksList;
         }
-
-        // ----------------------------FILTERING-----------------------
-        var filteredTasks = new ArrayList<>(tasksList.stream().filter(task -> {
-            if (taskFilter.beforeDate != null && task.getDueDate().isAfter(taskFilter.beforeDate)) {
-                return false;
-            }
-            if (taskFilter.afterDate != null && task.getDueDate().isBefore(taskFilter.afterDate)) {
-                return false;
-            }
-            if (taskFilter.completed != null && task.getCompleted() != taskFilter.completed) {
-                return false;
-            }
-            return true;
-        }).toList());
-
-        // ----------------------------SORTING-------------------------
-        filteredTasks.sort(new Sorter());
-        if(sortOrder != null)
-            if(sortOrder.equals("dateDesc"))
-                Collections.reverse(filteredTasks);
-        return filteredTasks;
+        var filteredTasks = filterTasks(taskFilter);
+        return sortTasks(sortOrder, filteredTasks);
     }
 
     public Task getTaskById(Integer id) {
@@ -122,7 +104,7 @@ public class TasksService {
     }
 
     // ----------------------------------------------------------------
-    //                    VALIDATION_FUNCTIONS
+    //           FUNCTIONS(VALIDATION + FILTERING + SORTING)
     // ----------------------------------------------------------------
     public void validateTask(LocalDate dueDate) {
         if(dueDate.isBefore(LocalDate.now()))
@@ -132,6 +114,33 @@ public class TasksService {
     public void validateTask(String name) {
         if(name.length() < 5 || name.length() > 100)
             throw new IllegalArgumentException(name);
+    }
+
+    public List<Task> filterTasks(TaskFilter taskFilter) {
+        return new ArrayList<>(tasksList.stream().filter(task -> {
+            if (taskFilter.beforeDate != null && task.getDueDate().isAfter(taskFilter.beforeDate)) {
+                return false;
+            }
+            if (taskFilter.afterDate != null && task.getDueDate().isBefore(taskFilter.afterDate)) {
+                return false;
+            }
+            if (taskFilter.completed != null && task.getCompleted() != taskFilter.completed) {
+                return false;
+            }
+            return true;
+        }).toList());
+    }
+
+    public List<Task> sortTasks(String sortOrder, List<Task> filteredTasks) {
+        if(sortOrder != null) {
+            filteredTasks.sort(new Sorter());
+
+            if (sortOrder.equals("dateDesc"))
+                Collections.reverse(filteredTasks);
+
+            return filteredTasks;
+        }
+        return filteredTasks;
     }
 
     // ----------------------------------------------------------------
