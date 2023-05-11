@@ -19,5 +19,6 @@ public class UsersService {
         //    b. hash the password
         //    c. validate the email format
         //  3. return the saved user
+        return null;
     }
 }

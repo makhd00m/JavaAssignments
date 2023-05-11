@@ -1,0 +1,1 @@
+![](./extras/blogging-app.drawio.svg)

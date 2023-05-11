@@ -5,6 +5,8 @@ import com.scaler.blogapi.users.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @Entity(name = "articles")
 public class ArticleEntity extends BaseEntity {
@@ -20,4 +22,12 @@ public class ArticleEntity extends BaseEntity {
 
     @ManyToOne
     UserEntity author;
+
+    @ManyToMany(targetEntity = UserEntity.class)
+    @JoinTable(
+            name = "articles_likes",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    List<UserEntity> likes;
 }

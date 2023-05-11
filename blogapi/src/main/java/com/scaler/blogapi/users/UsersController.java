@@ -21,5 +21,6 @@ public class UsersController {
         //  1. create a UserSignupDTO (containing username, email, password)
         //  2. call usersServcie.createUser with those details
         //  3. respond with 202 ACCEPTED if user is created successfully
+        return null;
     }
 }

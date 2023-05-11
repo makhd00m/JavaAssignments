@@ -1,8 +1,10 @@
 package com.scaler.blogapi.users;
 
+import com.scaler.blogapi.articles.ArticleEntity;
 import com.scaler.blogapi.commons.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,8 +28,12 @@ public class UserEntity extends BaseEntity {
     @Column
     String bio;
 
-    @ManyToMany(/* TODO: figure this out */)
+    @ManyToMany(targetEntity = UserEntity.class, mappedBy = "following")
     List<UserEntity> followers;
-    @ManyToMany(/* TODO: figure this out */)
+
+    @ManyToMany(targetEntity = UserEntity.class)
     List<UserEntity> following;
+
+    @ManyToMany(targetEntity = ArticleEntity.class, mappedBy = "likes")
+    List<ArticleEntity> favouriteArticles;
 }
