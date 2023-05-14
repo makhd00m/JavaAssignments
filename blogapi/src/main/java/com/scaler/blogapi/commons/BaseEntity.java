@@ -14,6 +14,7 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @CreatedDate
+    @CreatedDate()
+    @Column(name = "created_at", updatable = false)
     Date createdAt;
 }
