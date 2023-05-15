@@ -1,5 +1,6 @@
 package com.scaler.blogapi.users;
 
+import com.scaler.blogapi.users.dtos.CreateUserResponseDTO;
 import com.scaler.blogapi.users.dtos.UserResponseDTO;
 import com.scaler.blogapi.users.dtos.UserSignupDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class UsersController {
     }
 
     @PostMapping("/signup")
-    ResponseEntity<UserResponseDTO> signupUser(
+    ResponseEntity<CreateUserResponseDTO> signupUser(
             @RequestBody UserSignupDTO userSignupDTO
     ) {
         // TODO 01:
@@ -28,8 +29,8 @@ public class UsersController {
                 userSignupDTO.getPassword(),
                 userSignupDTO.getEmail()
         );
-        UserResponseDTO userResponseDTO = new UserResponseDTO().createDTO(userEntity);
-        return ResponseEntity.ok(userResponseDTO);
+        CreateUserResponseDTO createUserResponseDTO = new CreateUserResponseDTO().createDTO(userEntity);
+        return ResponseEntity.ok(createUserResponseDTO);
     }
 
     @PostMapping("/login")
