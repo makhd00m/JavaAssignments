@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 @Data
-public class CreateUserRequesetDTO {
+public class CreateUserRequestDTO {
     @NonNull
     String username;
     @NonNull
