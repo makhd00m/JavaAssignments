@@ -34,12 +34,12 @@ public class UsersController {
     }
 
     @PostMapping("/login")
-    ResponseEntity<UserResponseDTO> loginUser() {
+    ResponseEntity<String> loginUser() {
         // TODO 03:
         //  1. create a UserLoginDTO (containing username, password)
         //  2. call usersService.loginUser() with those details
         //  3. respond with 202 ACCEPTED if user is logged in successfully
-        return null;
+        return ResponseEntity.accepted().body("User login successful");
     }
 
     @PatchMapping("/{id}")
