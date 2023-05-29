@@ -1,7 +1,6 @@
 package com.scaler.blogapi.users.dtos;
 
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
 @Data
 public class UserSignupDTO {

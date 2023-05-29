@@ -24,7 +24,7 @@ public class UserEntity extends BaseEntity {
     @Column(nullable = false, unique = true, length = 50)
     String email;
     @NonNull
-    @Column(nullable = false, length = 32)
+    @Column(nullable = false)
     String password;            // TODO: do not save password in plain text
     @Column
     String bio;

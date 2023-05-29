@@ -2,12 +2,12 @@ package com.scaler.blogapi.users.dtos;
 
 import com.scaler.blogapi.users.UserEntity;
 import jakarta.annotation.Nullable;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 @Data
 @NoArgsConstructor(force = true)
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class CreateUserResponseDTO {
     @NonNull
     String username;
@@ -17,11 +17,4 @@ public class CreateUserResponseDTO {
     String bio;
 
     String token;
-
-    public CreateUserResponseDTO createDTO(UserEntity userEntity) {
-        this.username = userEntity.getUsername();
-        this.email = userEntity.getEmail();
-        this.bio = userEntity.getBio();
-        return this;
-    }
 }
