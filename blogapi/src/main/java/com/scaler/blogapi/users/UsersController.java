@@ -1,9 +1,11 @@
 package com.scaler.blogapi.users;
 
+import com.scaler.blogapi.security.TokenService;
 import com.scaler.blogapi.users.dtos.CreateUserResponseDTO;
 import com.scaler.blogapi.users.dtos.UserLoginDTO;
 import com.scaler.blogapi.users.dtos.UserResponseDTO;
 import com.scaler.blogapi.users.dtos.UserSignupDTO;
+import org.apache.el.parser.Token;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +16,16 @@ import org.springframework.web.bind.annotation.*;
 public class UsersController {
     private final UsersService usersService;
     private final ModelMapper modelMapper;
+    private final TokenService tokenService;
 
     public UsersController(
             @Autowired UsersService usersService,
-            @Autowired ModelMapper modelMapper
-    ) {
+            @Autowired ModelMapper modelMapper,
+            @Autowired TokenService tokenService
+            ) {
         this.usersService = usersService;
         this.modelMapper = modelMapper;
+        this.tokenService = tokenService;
     }
 
     @PostMapping("/signup")
@@ -35,6 +40,7 @@ public class UsersController {
                 userSignupDTO.getEmail()
         );
         var userResponse = modelMapper.map(savedUser, CreateUserResponseDTO.class);
+        userResponse.setToken(tokenService.createAuthToken(savedUser.getUsername()));
         return ResponseEntity.accepted().body(userResponse);
     }
 
@@ -49,6 +55,7 @@ public class UsersController {
                 userLoginDTO.getPassword()
         );
         var userResponse = modelMapper.map(savedUser, CreateUserResponseDTO.class);
+        userResponse.setToken(tokenService.createAuthToken(savedUser.getUsername()));
         return ResponseEntity.accepted().body(userResponse);
     }
 
