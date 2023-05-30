@@ -1,13 +1,14 @@
 package com.scaler.blogapi.commons;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 import java.util.UUID;
 
-@Getter
+@Getter(AccessLevel.PUBLIC)
 @MappedSuperclass
 public abstract class BaseEntity {
     @Id
