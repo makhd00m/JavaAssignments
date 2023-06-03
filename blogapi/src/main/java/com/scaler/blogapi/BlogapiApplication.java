@@ -1,6 +1,6 @@
 package com.scaler.blogapi;
 
-import com.scaler.blogapi.security.JWTTokenService;
+import com.scaler.blogapi.security.jwt.JWTTokenService;
 import com.scaler.blogapi.security.TokenService;
 import com.scaler.blogapi.security.tokens.UserTokenRepository;
 import com.scaler.blogapi.security.tokens.UserTokenService;

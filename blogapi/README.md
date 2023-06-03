@@ -189,7 +189,14 @@ intput set - 2;  then P = 1/2^8
 ![](./docs/pw-hash-1.png)
 ![](./docs/pw-hash-2.png)
 
-
 ## Crypto Signature
 
-![](./docs/jwt-hash-signature.PNG)
+![](./docs/jwt-hash-signature.png)
+
+## Spring Authentication Filters
+
+![](./docs/spring-authentication-filters.png)
+
+## Docker Diagram
+
+![](./docs/docker-diagram.png)
