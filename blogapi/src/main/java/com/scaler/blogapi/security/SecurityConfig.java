@@ -6,11 +6,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private TokenService tokenService;
+
+    public SecurityConfig(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -18,7 +23,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/articles").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users/signup", "/users/login").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
-                .anyRequest().permitAll();
+                .anyRequest().authenticated();
+        http.addFilterBefore(new UserAuthenticationFilter(tokenService), AnonymousAuthenticationFilter.class);
         return http.build();
     }
 }

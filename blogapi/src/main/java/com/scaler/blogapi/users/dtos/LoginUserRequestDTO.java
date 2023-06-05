@@ -1,12 +1,13 @@
 package com.scaler.blogapi.users.dtos;
 
+import jakarta.annotation.Nullable;
 import lombok.Data;
 import lombok.NonNull;
 
 @Data
-public class UserLoginDTO {
+public class LoginUserRequestDTO {
     @NonNull
-    private String username;
+    String username;
     @NonNull
-    private String password;
+    String password;
 }

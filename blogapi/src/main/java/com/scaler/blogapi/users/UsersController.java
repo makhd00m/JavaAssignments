@@ -1,11 +1,7 @@
 package com.scaler.blogapi.users;
 
 import com.scaler.blogapi.security.TokenService;
-import com.scaler.blogapi.users.dtos.CreateUserResponseDTO;
-import com.scaler.blogapi.users.dtos.UserLoginDTO;
-import com.scaler.blogapi.users.dtos.UserResponseDTO;
-import com.scaler.blogapi.users.dtos.UserSignupDTO;
-import org.apache.el.parser.Token;
+import com.scaler.blogapi.users.dtos.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,39 +18,33 @@ public class UsersController {
             @Autowired UsersService usersService,
             @Autowired ModelMapper modelMapper,
             @Autowired TokenService tokenService
-            ) {
+    ) {
         this.usersService = usersService;
         this.modelMapper = modelMapper;
         this.tokenService = tokenService;
     }
 
     @PostMapping("/signup")
-    ResponseEntity<CreateUserResponseDTO> signupUser(@RequestBody UserSignupDTO userSignupDTO) {
-        // TODO 01:
-        //  1. create a UserSignupDTO (containing username, email, password)
-        //  2. call usersService.createUser() with those details
-        //  3. respond with 202 ACCEPTED if user is created successfully
+    ResponseEntity<UserResponseDTO> signupUser(@RequestBody CreateUserRequestDTO createUserRequestDTO) {
+
         var savedUser = usersService.createUser(
-                userSignupDTO.getUsername(),
-                userSignupDTO.getPassword(),
-                userSignupDTO.getEmail()
+                createUserRequestDTO.getUsername(),
+                createUserRequestDTO.getPassword(),
+                createUserRequestDTO.getEmail()
         );
-        var userResponse = modelMapper.map(savedUser, CreateUserResponseDTO.class);
+        var userResponse = modelMapper.map(savedUser, UserResponseDTO.class);
         userResponse.setToken(tokenService.createAuthToken(savedUser.getUsername()));
         return ResponseEntity.accepted().body(userResponse);
     }
 
     @PostMapping("/login")
-    ResponseEntity<CreateUserResponseDTO> loginUser(@RequestBody UserLoginDTO userLoginDTO) {
-        // TODO 03:
-        //  1. create a UserLoginDTO (containing username, password)
-        //  2. call usersService.loginUser() with those details
-        //  3. respond with 202 ACCEPTED if user is logged in successfully
+    ResponseEntity<UserResponseDTO> loginUser(@RequestBody LoginUserRequestDTO loginUserRequestDTO) {
+
         var savedUser = usersService.loginUser(
-                userLoginDTO.getUsername(),
-                userLoginDTO.getPassword()
+                loginUserRequestDTO.getUsername(),
+                loginUserRequestDTO.getPassword()
         );
-        var userResponse = modelMapper.map(savedUser, CreateUserResponseDTO.class);
+        var userResponse = modelMapper.map(savedUser, UserResponseDTO.class);
         userResponse.setToken(tokenService.createAuthToken(savedUser.getUsername()));
         return ResponseEntity.accepted().body(userResponse);
     }

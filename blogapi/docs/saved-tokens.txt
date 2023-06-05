@@ -1,27 +1,27 @@
 {
-    "username": "sanket",
-    "email": "sanket@scaler.com",
+    "username": "AbuTalha",
+    "email": "Abu.Talha@yahoo.com",
     "bio": null,
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYW5rZXQiLCJpc3MiOiJibG9nLWFwaSIsImlhdCI6MTY4NDU1MTQ3MywiZXhwIjoxNjg0NjM3ODczfQ.c_E2ZwPjVd3Hf8e8N6X4Oimtn6-rag8xzt1XFjcLqXk"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBYnVUYWxoYSIsImlzcyI6ImJsb2ctYXBpIiwiaWF0IjoxNjg1ODEyMDU5LCJleHAiOjE2ODU4OTg0NTl9.8HSEG0hITyKZQhjokqPwvmjTye3IzvokP9sUP09trp8"
 }
 
 {
-    "username": "bhanu",
-    "email": "bhanu@scaler.com",
+    "username": "ShahHayat",
+    "email": "Shah.Hayat@scaler.com",
     "bio": null,
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiaGFudSIsImlzcyI6ImJsb2ctYXBpIiwiaWF0IjoxNjg0NTUxNTQyLCJleHAiOjE2ODQ2Mzc5NDJ9.SFpXYg_fZWTXhoLb9_rLrfHCMTeM9F0YdF-rJBY_OCU"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJTaGFoSGF5YXQiLCJpc3MiOiJibG9nLWFwaSIsImlhdCI6MTY4NTgxMjEwMywiZXhwIjoxNjg1ODk4NTAzfQ.4NyMbyoXNwKwuT0IVVwosicsCRQIlj4IA_Tzv7hDlIA"
 }
 
 {
-    "username": "manish",
-    "email": "manish@scaler.com",
+    "username": "VikasKumar",
+    "email": "Vikas.Kumar@gmail.com",
     "bio": null,
-    "token": "b68f451a-7d21-441a-b5c9-e2a355350838"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJWaWthc0t1bWFyIiwiaXNzIjoiYmxvZy1hcGkiLCJpYXQiOjE2ODU4MTIxMzIsImV4cCI6MTY4NTg5ODUzMn0.IlMzTZavA9_HauplZ9iEYIiIf5o0y6qvwH5f6xyjx5Y"
 }
 
 {
-    "username": "ashok",
-    "email": "ashok@scaler.com",
+    "username": "AkashShahi",
+    "email": "Akash.Shahi@scaler.com",
     "bio": null,
-    "token": "9df4e78e-e98c-453f-81a6-9a5cb4ff78d6"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBa2FzaFNoYWhpIiwiaXNzIjoiYmxvZy1hcGkiLCJpYXQiOjE2ODU4MTIxNjQsImV4cCI6MTY4NTg5ODU2NH0.cl2ZmVWlmgqCOyhKL9ro3Qg2jNJCsIc5mKL9MkPySus"
 }

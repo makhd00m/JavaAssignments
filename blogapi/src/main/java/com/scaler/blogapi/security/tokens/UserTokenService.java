@@ -30,6 +30,7 @@ public class UserTokenService implements TokenService {
                 .build()
         );
         return token.getId().toString();
+        
     }
 
     @Override

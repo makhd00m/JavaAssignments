@@ -10,8 +10,8 @@ import java.util.Date;
 
 @Entity(name = "user_tokens")
 @Getter
-@AllArgsConstructor
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Builder
 public class UserTokenEntity extends BaseEntity {
 
